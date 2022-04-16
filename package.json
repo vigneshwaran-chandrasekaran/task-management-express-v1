@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "express": "^4.17.3",
     "joi": "^17.6.0",
