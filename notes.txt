@@ -1,0 +1,5 @@
+https://github.com/mosh-hamedani/vidly-api-node
+https://github.com/flojon/vidly-node
+https://github.com/mrazadar/codewithmosh-nodejs/tree/master/vidly
+https://github.com/schiersj/vidly-api-node
+https://github.com/Zifah/Learning-Node-With-Mosh/tree/master/vidly
