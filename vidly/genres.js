@@ -6,54 +6,54 @@ const app = express();
 
 app.use(express.json());
 
-const courses = [
+const genres = [
   { id: 1, name: "MERN" },
   { id: 2, name: "React Native" },
   { id: 3, name: "React" },
 ];
 
-function validateCourse(course) {
+function validateCourse(genre) {
   const schema = Joi.object({
     name: Joi.string().alphanum().min(3).required(),
   });
 
-  return schema.validate(course);
+  return schema.validate(genre);
 }
 
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.get("/api/courses", (req, res) => {
-  res.send(courses);
+app.get("/api/genres", (req, res) => {
+  res.send(genres);
 });
 
-app.get("/api/courses/:id", (req, res) => {
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
-  if (!course) {
+app.get("/api/genres/:id", (req, res) => {
+  const genre = genres.find((c) => c.id === parseInt(req.params.id));
+  if (!genre) {
     return res.status(404).send("Course not found");
   }
-  res.send(course);
+  res.send(genre);
 });
 
-app.post("/api/courses", (req, res) => {
+app.post("/api/genres", (req, res) => {
   const { error } = validateCourse(req.body);
 
   if (error) {
     return res.status(400).send(error.message);
   }
 
-  const course = {
-    id: courses.length + 1,
+  const genre = {
+    id: genres.length + 1,
     name: req.body.name,
   };
-  courses.push(course);
-  res.send(course);
+  genres.push(genre);
+  res.send(genre);
 });
 
-app.put("/api/courses/:id", (req, res) => {
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
-  if (!course) {
+app.put("/api/genres/:id", (req, res) => {
+  const genre = genres.find((c) => c.id === parseInt(req.params.id));
+  if (!genre) {
     return res.status(404).send("Course not found");
   }
 
@@ -63,19 +63,19 @@ app.put("/api/courses/:id", (req, res) => {
     return res.status(400).send(error.message);
   }
 
-  course.name = req.body.name;
-  res.send(course);
+  genre.name = req.body.name;
+  res.send(genre);
 });
 
-app.delete("/api/courses/:id", (req, res) => {
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
-  if (!course) {
+app.delete("/api/genres/:id", (req, res) => {
+  const genre = genres.find((c) => c.id === parseInt(req.params.id));
+  if (!genre) {
     return res.status(404).send("Course not found");
   }
 
-  const index = courses.indexOf(course);
-  courses.splice(index, 1);
-  res.send(course);
+  const index = genres.indexOf(genre);
+  genres.splice(index, 1);
+  res.send(genre);
 });
 
 const port = process.env.PORT || 3100;
