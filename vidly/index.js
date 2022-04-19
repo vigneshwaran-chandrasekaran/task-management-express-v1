@@ -12,6 +12,14 @@ const courses = [
   { id: 3, name: "React" },
 ];
 
+function validateCourse(course) {
+  const schema = Joi.object({
+    name: Joi.string().alphanum().min(3).required(),
+  });
+
+  return schema.validate(course);
+}
+
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
@@ -29,17 +37,11 @@ app.get("/api/courses/:id", (req, res) => {
 });
 
 app.post("/api/courses", (req, res) => {
-  const schema = Joi.object({
-    name: Joi.string().alphanum().min(3).required(),
-  });
+  const { error } = validateCourse(req.body);
 
-  const result = schema.validate(req.body);
-
-  if (result.error) {
-    return res.status(400).send(result.error.message);
+  if (error) {
+    return res.status(400).send(error.message);
   }
-
-  console.log("result", result);
 
   const course = {
     id: courses.length + 1,
@@ -55,14 +57,10 @@ app.put("/api/courses/:id", (req, res) => {
     return res.status(404).send("Course not found");
   }
 
-  const schema = Joi.object({
-    name: Joi.string().alphanum().min(3).required(),
-  });
+  const { error } = validateCourse(req.body);
 
-  const result = schema.validate(req.body);
-
-  if (result.error) {
-    return res.status(400).send(result.error.message);
+  if (error) {
+    return res.status(400).send(error.message);
   }
 
   course.name = req.body.name;
