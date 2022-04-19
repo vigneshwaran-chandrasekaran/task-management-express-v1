@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
+    "vidly": "nodemon vidly/index.js",
     "start": "node index.js",
     "seed": "node seed.js",
     "test": "jest --watchAll --verbose"
