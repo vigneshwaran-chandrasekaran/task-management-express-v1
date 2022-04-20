@@ -1,10 +1,23 @@
 const express = require("express");
 const Joi = require("joi");
-const res = require("express/lib/response");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const logger = require("./middleware/logger");
 
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(helmet());
+app.use(logger);
+
+if (app.get("env") === "development") {
+  console.log("app:-", app.get("env"));
+  app.use(morgan("tiny"));
+  app.use(morgan("short"));
+  app.use(morgan("common"));
+  app.use(morgan("combined"));
+}
 
 const courses = [
   { id: 1, name: "MERN" },
