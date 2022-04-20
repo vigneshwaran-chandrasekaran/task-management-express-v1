@@ -35,4 +35,13 @@ async function createCourse() {
   console.log("result", result);
 }
 
-createCourse();
+async function getCourses() {
+  const courses = await Course.find({ name: "MERN" })
+    .limit(2)
+    .sort({ name: 1 })
+    .select({ name: 1, tags: 1 });
+  console.log("courses", courses);
+}
+
+// createCourse();
+getCourses();
