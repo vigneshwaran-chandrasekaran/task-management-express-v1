@@ -18,8 +18,6 @@ function validateCourse(course) {
 }
 
 router.get("/", (req, res) => {
-  throw new Error("Whoops!");
-
   res.send(courses);
 });
 

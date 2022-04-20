@@ -1,10 +1,7 @@
 const express = require("express");
 const Joi = require("joi");
-const res = require("express/lib/response");
 
-const app = express();
-
-app.use(express.json());
+const router = express.Router();
 
 const genres = [
   { id: 1, name: "MERN" },
@@ -12,7 +9,7 @@ const genres = [
   { id: 3, name: "React" },
 ];
 
-function validateCourse(genre) {
+function validateGenre(genre) {
   const schema = Joi.object({
     name: Joi.string().alphanum().min(3).required(),
   });
@@ -20,24 +17,20 @@ function validateCourse(genre) {
   return schema.validate(genre);
 }
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
-
-app.get("/api/genres", (req, res) => {
+router.get("/", (req, res) => {
   res.send(genres);
 });
 
-app.get("/api/genres/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   const genre = genres.find((c) => c.id === parseInt(req.params.id));
   if (!genre) {
-    return res.status(404).send("Course not found");
+    return res.status(404).send("Genre not found");
   }
   res.send(genre);
 });
 
-app.post("/api/genres", (req, res) => {
-  const { error } = validateCourse(req.body);
+router.post("/", (req, res) => {
+  const { error } = validateGenre(req.body);
 
   if (error) {
     return res.status(400).send(error.message);
@@ -51,13 +44,13 @@ app.post("/api/genres", (req, res) => {
   res.send(genre);
 });
 
-app.put("/api/genres/:id", (req, res) => {
+router.put("/:id", (req, res) => {
   const genre = genres.find((c) => c.id === parseInt(req.params.id));
   if (!genre) {
-    return res.status(404).send("Course not found");
+    return res.status(404).send("Genre not found");
   }
 
-  const { error } = validateCourse(req.body);
+  const { error } = validateGenre(req.body);
 
   if (error) {
     return res.status(400).send(error.message);
@@ -67,10 +60,10 @@ app.put("/api/genres/:id", (req, res) => {
   res.send(genre);
 });
 
-app.delete("/api/genres/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   const genre = genres.find((c) => c.id === parseInt(req.params.id));
   if (!genre) {
-    return res.status(404).send("Course not found");
+    return res.status(404).send("Genre not found");
   }
 
   const index = genres.indexOf(genre);
@@ -78,8 +71,4 @@ app.delete("/api/genres/:id", (req, res) => {
   res.send(genre);
 });
 
-const port = process.env.PORT || 3100;
-
-app.listen(port, () => {
-  console.log(`Listening on port ${port}...`);
-});
+module.exports = router;

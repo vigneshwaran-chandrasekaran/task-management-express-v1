@@ -7,6 +7,7 @@ const dbDebugger = require("debug")("app:db");
 
 const logger = require("./middleware/logger");
 const courses = require("./routes/courses");
+const genres = require("./routes/genres");
 
 const app = express();
 
@@ -22,6 +23,7 @@ if (app.get("env") === "development") {
 }
 
 app.use("/api/courses", courses);
+app.use("/api/genres", genres);
 
 app.get("/", (req, res) => {
   res.send("Welcome to vidly World");
