@@ -1,8 +1,12 @@
+require("dotenv").config();
 const express = require("express");
-const Joi = require("joi");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const startupDebugger = require("debug")("app:startup");
+const dbDebugger = require("debug")("app:db");
+
 const logger = require("./middleware/logger");
+const courses = require("./routes/courses");
 
 const app = express();
 
@@ -12,83 +16,26 @@ app.use(helmet());
 app.use(logger);
 
 if (app.get("env") === "development") {
-  console.log("app:-", app.get("env"));
+  startupDebugger("Morgan enabled...");
+  dbDebugger("dbDebugger enabled...");
   app.use(morgan("tiny"));
-  app.use(morgan("short"));
-  app.use(morgan("common"));
-  app.use(morgan("combined"));
 }
 
-const courses = [
-  { id: 1, name: "MERN" },
-  { id: 2, name: "React Native" },
-  { id: 3, name: "React" },
-];
-
-function validateCourse(course) {
-  const schema = Joi.object({
-    name: Joi.string().alphanum().min(3).required(),
-  });
-
-  return schema.validate(course);
-}
+app.use("/api/courses", courses);
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Welcome to vidly World");
 });
 
-app.get("/api/courses", (req, res) => {
-  res.send(courses);
-});
-
-app.get("/api/courses/:id", (req, res) => {
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
-  if (!course) {
-    return res.status(404).send("Course not found");
-  }
-  res.send(course);
-});
-
-app.post("/api/courses", (req, res) => {
-  const { error } = validateCourse(req.body);
-
-  if (error) {
-    return res.status(400).send(error.message);
-  }
-
-  const course = {
-    id: courses.length + 1,
-    name: req.body.name,
+app.use((err, req, res, next) => {
+  const defaultErr = {
+    log: "Express error handler caught unknown middleware error",
+    status: 500,
+    message: { err: "An error occurred" },
   };
-  courses.push(course);
-  res.send(course);
-});
-
-app.put("/api/courses/:id", (req, res) => {
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
-  if (!course) {
-    return res.status(404).send("Course not found");
-  }
-
-  const { error } = validateCourse(req.body);
-
-  if (error) {
-    return res.status(400).send(error.message);
-  }
-
-  course.name = req.body.name;
-  res.send(course);
-});
-
-app.delete("/api/courses/:id", (req, res) => {
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
-  if (!course) {
-    return res.status(404).send("Course not found");
-  }
-
-  const index = courses.indexOf(course);
-  courses.splice(index, 1);
-  res.send(course);
+  const errorObj = Object.assign({}, defaultErr, err);
+  console.log(errorObj.log);
+  return res.status(errorObj.status).json(errorObj.message);
 });
 
 const port = process.env.PORT || 3100;
