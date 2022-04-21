@@ -43,5 +43,83 @@ async function getCourses() {
   console.log("courses", courses);
 }
 
+async function updateCoursesQueryFirst(id) {
+  // 1. Query First
+  // findById()
+  // Modify its properties
+  // save()
+
+  const course = await Course.findById(id);
+
+  if (!course) {
+    console.log("Course not found");
+    return;
+  }
+
+  // first approach
+  course.isPublished = false;
+
+  // second approach
+  course.set({
+    author: "Vigneshwaran Chandrasekaran",
+  });
+
+  const result = await course.save();
+
+  console.log("course result", result);
+}
+
+async function updateCoursesUpdateFirst(id) {
+  // 2. Update First
+  // Update directly
+  // Optionally: get the updated document
+  const result = await Course.updateOne(
+    { _id: id },
+    {
+      $set: {
+        author: "Vigneshwaran India 123",
+      },
+    }
+  );
+
+  console.log("course result", result);
+}
+
+async function updateCoursesUpdateFirst(id) {
+  // 2. Update First
+  // Update directly
+  // Optionally: get the updated document
+  const result = await Course.updateOne(
+    { _id: id },
+    {
+      $set: {
+        author: "Vigneshwaran India 123",
+      },
+    }
+  );
+
+  console.log("course result", result);
+}
+
+async function updateCoursesUpdateFirstReturn(id) {
+  // 2. Update First
+  // Update directly
+  // Optionally: get the updated document
+  const result = await Course.findOneAndUpdate(
+    id,
+    {
+      $set: {
+        author: "Vigneshwaran Change",
+      },
+    },
+    { new: true }
+  );
+
+  console.log("course result", result);
+}
+
 // createCourse();
-getCourses();
+// getCourses();
+// updateCoursesQueryFirst("6260529a899da5851fea7122");
+// updateCoursesUpdateFirst("6260529a899da5851fea7122");
+updateCoursesUpdateFirstReturn("6260529a899da5851fea7122");
