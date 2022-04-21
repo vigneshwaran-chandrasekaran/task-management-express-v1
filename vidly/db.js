@@ -11,7 +11,18 @@ mongoose
   });
 
 const courseSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 50,
+    trim: true,
+  },
+  category: {
+    type: String,
+    required: true,
+    enum: ["web", "html", "css", "js"],
+  },
   author: String,
   tags: [String],
   date: {
@@ -19,20 +30,32 @@ const courseSchema = new mongoose.Schema({
     default: Date.now,
   },
   isPublished: Boolean,
+  price: {
+    type: Number,
+    required: function () {
+      return this.isPublished;
+    },
+  },
 });
 
 const Course = mongoose.model("Course", courseSchema);
 
 async function createCourse() {
   const course = new Course({
+    category: "22",
     name: "MERN",
     author: "Vigneshwaran",
     tags: ["Javascript", "Node", "CSS"],
-    isPublished: true,
+    isPublished: false,
   });
 
-  const result = await course.save();
-  console.log("result", result);
+  try {
+    const result = await course.save();
+    // const result = await course.validate();
+    console.log("result", result);
+  } catch (error) {
+    console.log("error", error.message);
+  }
 }
 
 async function getCourses() {
@@ -124,9 +147,9 @@ async function removeCourse(id) {
   console.log("course result", course);
 }
 
-// createCourse();
+createCourse();
 // getCourses();
 // updateCoursesQueryFirst("6260529a899da5851fea7122");
 // updateCoursesUpdateFirst("6260529a899da5851fea7122");
 // updateCoursesUpdateFirstReturn("6260529a899da5851fea7122");
-removeCourse("6260529a899da5851fea7122");
+// removeCourse("6260529a899da5851fea7122");
