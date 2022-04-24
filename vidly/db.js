@@ -29,7 +29,7 @@ const courseSchema = new mongoose.Schema({
     type: Array,
     validate: {
       validator: function (v) {
-        return v.length > 0;
+        return v?.length > 0;
       },
       message: "couse should have atlead one tags",
     },
@@ -51,10 +51,11 @@ const Course = mongoose.model("Course", courseSchema);
 
 async function createCourse() {
   const course = new Course({
-    category: "22",
-    name: "MERN",
+    category: "web",
+    name: "MERN JS",
     author: "Vigneshwaran",
-    tags: ["Javascript", "Node", "CSS"],
+    // tags: ["Javascript", "Node", "CSS"],
+    tags: null,
     isPublished: false,
   });
 
