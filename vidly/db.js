@@ -25,6 +25,15 @@ const courseSchema = new mongoose.Schema({
   },
   author: String,
   tags: [String],
+  tags: {
+    type: Array,
+    validate: {
+      validator: function (v) {
+        return v.length > 0;
+      },
+      message: "couse should have atlead one tags",
+    },
+  },
   date: {
     type: Date,
     default: Date.now,
