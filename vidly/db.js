@@ -20,7 +20,7 @@ const courseSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required: true,
+    required: [true, "Category is required"],
     enum: ["web", "html", "css", "js"],
   },
   author: String,
@@ -33,6 +33,21 @@ const courseSchema = new mongoose.Schema({
       },
       message: "couse should have atlead one tags",
     },
+  },
+  places: {
+    type: Array,
+    validate: {
+      validator: function (v) {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            const result = v && v.length > 0;
+            resolve(result);
+          }, 4000);
+        });
+      },
+      message: "places should have atlead one place",
+    },
+    required: [true, "Place is required"],
   },
   date: {
     type: Date,
@@ -51,11 +66,11 @@ const Course = mongoose.model("Course", courseSchema);
 
 async function createCourse() {
   const course = new Course({
-    category: "web",
-    name: "MERN JS",
-    author: "Vigneshwaran",
-    // tags: ["Javascript", "Node", "CSS"],
-    tags: null,
+    // category: "web",
+    // name: "MERN JS",
+    // author: "Vigneshwaran",
+    tags: ["Javascript", "Node", "CSS"],
+    places: null,
     isPublished: false,
   });
 
@@ -63,8 +78,10 @@ async function createCourse() {
     const result = await course.save();
     // const result = await course.validate();
     console.log("result", result);
-  } catch (error) {
-    console.log("error", error.message);
+  } catch (er) {
+    for (field in er.errors) {
+      console.log(er.errors[field].message);
+    }
   }
 }
 
