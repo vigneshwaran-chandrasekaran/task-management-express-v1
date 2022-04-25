@@ -22,6 +22,9 @@ const courseSchema = new mongoose.Schema({
     type: String,
     required: [true, "Category is required"],
     enum: ["web", "html", "css", "js"],
+    lowercase: true,
+    // uppercase: true,
+    trim: true,
   },
   author: String,
   tags: [String],
@@ -47,7 +50,7 @@ const courseSchema = new mongoose.Schema({
       },
       message: "places should have atlead one place",
     },
-    required: [true, "Place is required"],
+    required: [true, "places is required"],
   },
   date: {
     type: Date,
@@ -59,6 +62,10 @@ const courseSchema = new mongoose.Schema({
     required: function () {
       return this.isPublished;
     },
+    min: 10,
+    max: 200,
+    get: v => Math.round(v),
+    set: v => Math.round(v)
   },
 });
 
@@ -66,12 +73,14 @@ const Course = mongoose.model("Course", courseSchema);
 
 async function createCourse() {
   const course = new Course({
-    // category: "web",
-    // name: "MERN JS",
-    // author: "Vigneshwaran",
+    name: "MERN JS",
+    category: "HTML",
+    author: "Vigneshwaran",
     tags: ["Javascript", "Node", "CSS"],
-    places: null,
+    category: "web",
+    places: ['india'],
     isPublished: false,
+    price: 11.22
   });
 
   try {
