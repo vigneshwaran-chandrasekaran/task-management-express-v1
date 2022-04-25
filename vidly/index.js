@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const mongoose = require("mongoose");
 const startupDebugger = require("debug")("app:startup");
 const dbDebugger = require("debug")("app:db");
 
@@ -10,6 +11,17 @@ const courses = require("./routes/courses");
 const genres = require("./routes/genres");
 
 const app = express();
+
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Connected to MongoDB...");
+  })
+  .catch((err) => {
+    console.log("Error to MongoDB...", err);
+  });
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

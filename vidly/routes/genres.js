@@ -1,7 +1,20 @@
 const express = require("express");
 const Joi = require("joi");
+const mongoose = require("mongoose");
 
 const router = express.Router();
+
+const genreSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 50,
+    trim: true,
+  },
+});
+
+const Genre = mongoose.model("Genre", genreSchema);
 
 const genres = [
   { id: 1, name: "MERN" },
@@ -17,7 +30,8 @@ function validateGenre(genre) {
   return schema.validate(genre);
 }
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  const genres = await Genre.find({}).sort("name");
   res.send(genres);
 });
 
@@ -29,19 +43,25 @@ router.get("/:id", (req, res) => {
   res.send(genre);
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { error } = validateGenre(req.body);
 
   if (error) {
     return res.status(400).send(error.message);
   }
 
-  const genre = {
-    id: genres.length + 1,
-    name: req.body.name,
-  };
-  genres.push(genre);
-  res.send(genre);
+  try {
+    const genre = new Genre({
+      name: req.body.name,
+    });
+
+    const result = await genre.save();
+    res.send(result);
+  } catch (er) {
+    for (field in er.errors) {
+      console.log(er.errors[field].message);
+    }
+  }
 });
 
 router.put("/:id", (req, res) => {
