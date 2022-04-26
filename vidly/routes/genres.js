@@ -16,12 +16,6 @@ const genreSchema = new mongoose.Schema({
 
 const Genre = mongoose.model("Genre", genreSchema);
 
-const genres = [
-  { id: 1, name: "MERN" },
-  { id: 2, name: "React Native" },
-  { id: 3, name: "React" },
-];
-
 function validateGenre(genre) {
   const schema = Joi.object({
     name: Joi.string().alphanum().min(3).required(),
@@ -79,18 +73,17 @@ router.put("/:id", async (req, res) => {
   );
 
   if (!genre) {
-    return res.status(404).send("Genre not found");
+    return res.status(404).json({ error: "Genre not found" });
   }
 
   res.send(genre);
 });
 
 router.delete("/:id", async (req, res) => {
-
   const genre = await Genre.findByIdAndRemove(req.params.id);
 
   if (!genre) {
-    return res.status(404).send("Genre not found");
+    return res.status(404).json({ error: "Genre not found" });
   }
 
   res.send(genre);
