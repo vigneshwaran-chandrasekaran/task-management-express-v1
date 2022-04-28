@@ -64,8 +64,8 @@ const courseSchema = new mongoose.Schema({
     },
     min: 10,
     max: 200,
-    get: v => Math.round(v),
-    set: v => Math.round(v)
+    get: (v) => Math.round(v),
+    set: (v) => Math.round(v),
   },
 });
 
@@ -78,9 +78,9 @@ async function createCourse() {
     author: "Vigneshwaran",
     tags: ["Javascript", "Node", "CSS"],
     category: "web",
-    places: ['india'],
+    places: ["india"],
     isPublished: false,
-    price: 11.22
+    price: 11.22,
   });
 
   try {
