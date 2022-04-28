@@ -10,6 +10,7 @@ const logger = require("./middleware/logger");
 const courses = require("./routes/courses");
 const genres = require("./routes/genres");
 const customers = require("./routes/customers");
+const movies = require("./routes/movies");
 
 const app = express();
 
@@ -36,6 +37,7 @@ if (app.get("env") === "development") {
 app.use("/api/courses", courses);
 app.use("/api/genres", genres);
 app.use("/api/customers", customers);
+app.use("/api/movies", movies);
 
 app.get("/", (req, res) => {
   res.send("Welcome to vidly World");
