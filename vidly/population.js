@@ -52,11 +52,13 @@ async function createCourse(name, author) {
 }
 
 async function listCourses() {
-  const courses = await Course.find().select("name");
+  const courses = await Course.find().populate('author', 'name bio -_id').select("name");
   console.log("courses", courses);
 }
 
 
 // createAuthor('Vigneshwaran', 'Tamilnadu', 'vigneshwaran.top');
 
-createCourse('Node js Course', '626aaa5ff3952e50ce9fd0cb');
+// createCourse('Node js Course', '626aaa5ff3952e50ce9fd0cb');
+
+listCourses();
