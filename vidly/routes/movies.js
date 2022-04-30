@@ -13,7 +13,7 @@ router.get("/:id", async (req, res) => {
   const movie = await Movie.findById(req.params.id);
 
   if (!movie) {
-    return res.status(404).json({ error: "movie not found" });
+    return res.status(404).json({ error: "Movie not found" });
   }
   res.send(movie);
 });
@@ -85,5 +85,17 @@ router.put("/:id", async (req, res) => {
 
   res.send(genre);
 });
+
+
+router.delete("/:id", async (req, res) => {
+  const genre = await Movie.findByIdAndRemove(req.params.id);
+
+  if (!genre) {
+    return res.status(404).json({ error: "Movie not found" });
+  }
+
+  res.send(genre);
+});
+
 
 module.exports = router;
