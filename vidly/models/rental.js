@@ -53,7 +53,7 @@ const rentalSchema = new mongoose.Schema({
   rentalFee: {
     type: Number,
     min: 0,
-  }, 
+  },
 });
 
 const Rental = mongoose.model("Rental", rentalSchema);
@@ -63,7 +63,6 @@ function validateRental(rental) {
     customerId: Joi.string().required(),
     movieId: Joi.string().required(),
   });
-
   return schema.validate(rental);
 }
 
