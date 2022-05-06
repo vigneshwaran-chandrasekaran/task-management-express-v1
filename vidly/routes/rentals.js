@@ -22,7 +22,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
 
-  console.log('error', error);
+  console.log("error", error);
 
   if (error) {
     return res.status(400).send(error.message);
@@ -43,7 +43,14 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ error: "Movie Not in stock" });
   }
 
+  // https://stackoverflow.com/a/51238033/3882241
+
+  // const session = await Rental.startSession();
+  // session.startTransaction();
+
   try {
+    // const opts = { session };
+
     let rental = new Rental({
       title: req.body.title,
       customer: {
@@ -60,16 +67,28 @@ router.post("/", async (req, res) => {
       dailyRentalRate: movie.dailyRentalRate,
     });
 
+    // rental = await rental.save(opts);
     rental = await rental.save();
+
     movie.numberInStock--;
+    // movie.save(opts);
     movie.save();
+
+
+    // await session.commitTransaction();
+    // session.endSession();
 
     res.send(rental);
   } catch (er) {
-    console.log('er', er);
+    console.log("er", er);
+
     for (field in er.errors) {
       console.log(er.errors[field].message);
     }
+
+    // await session.abortTransaction();
+    // session.endSession();
+    res.status(500).send("Something failed.");
   }
 });
 
