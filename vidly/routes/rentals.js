@@ -1,6 +1,5 @@
 const express = require("express");
 const Joi = require("joi");
-Joi.objectId = require("joi-objectid")(Joi);
 const { Movie } = require("../models/movie");
 const { Customer } = require("../models/customer");
 const { Rental, validate } = require("../models/rental");

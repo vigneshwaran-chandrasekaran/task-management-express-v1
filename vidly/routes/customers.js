@@ -32,8 +32,8 @@ router.post("/", async (req, res) => {
       phone: req.body.phone,
     });
 
-    const result = await customer.save();
-    res.send(result);
+    await customer.save();
+    res.send(customer);
   } catch (er) {
     for (field in er.errors) {
       console.log(er.errors[field].message);

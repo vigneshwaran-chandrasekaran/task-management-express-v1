@@ -44,8 +44,8 @@ router.post("/", async (req, res) => {
       dailyRentalRate: req.body.dailyRentalRate,
     });
 
-    const result = await movie.save();
-    res.send(result);
+    await movie.save();
+    res.send(movie);
   } catch (er) {
     for (field in er.errors) {
       console.log(er.errors[field].message);
@@ -86,7 +86,6 @@ router.put("/:id", async (req, res) => {
   res.send(genre);
 });
 
-
 router.delete("/:id", async (req, res) => {
   const genre = await Movie.findByIdAndRemove(req.params.id);
 
@@ -96,6 +95,5 @@ router.delete("/:id", async (req, res) => {
 
   res.send(genre);
 });
-
 
 module.exports = router;

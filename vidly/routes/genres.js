@@ -29,8 +29,8 @@ router.post("/", async (req, res) => {
       name: req.body.name,
     });
 
-    const result = await genre.save();
-    res.send(result);
+    await genre.save();
+    res.send(genre);
   } catch (er) {
     for (field in er.errors) {
       console.log(er.errors[field].message);
