@@ -1,4 +1,6 @@
 const express = require("express");
+const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
 const { Movie } = require("../models/movie");
 const { Customer } = require("../models/customer");
 const { Rental, validate } = require("../models/rental");
@@ -29,14 +31,16 @@ router.post("/", async (req, res) => {
     return res.status(400).send(error.message);
   }
 
-  if (!mongoose.Types.ObjectId.isValid(req.body.movieId)) {
-    res.status(400).json({ error: "Invalid Movie" });
-  }
+  /**
+   * we can validate the objectId in model itself before coming to mongo db
+   */
+  // if (!mongoose.Types.ObjectId.isValid(req.body.movieId)) {
+  //   res.status(400).json({ error: "Invalid Movie" });
+  // }
 
-  if (!mongoose.Types.ObjectId.isValid(req.body.customerId)) {
-    res.status(400).json({ error: "Invalid Customer" });
-  }
-
+  // if (!mongoose.Types.ObjectId.isValid(req.body.customerId)) {
+  //   res.status(400).json({ error: "Invalid Customer" });
+  // }
 
   const movie = await Movie.findById(req.body.movieId);
   const customer = await Customer.findById(req.body.customerId);
