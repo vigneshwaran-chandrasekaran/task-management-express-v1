@@ -2,6 +2,7 @@ const express = require("express");
 const { Movie } = require("../models/movie");
 const { Customer } = require("../models/customer");
 const { Rental, validate } = require("../models/rental");
+const { default: mongoose } = require("mongoose");
 
 const router = express.Router();
 
@@ -27,6 +28,15 @@ router.post("/", async (req, res) => {
   if (error) {
     return res.status(400).send(error.message);
   }
+
+  if (!mongoose.Types.ObjectId.isValid(req.body.movieId)) {
+    res.status(400).json({ error: "Invalid Movie" });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(req.body.customerId)) {
+    res.status(400).json({ error: "Invalid Customer" });
+  }
+
 
   const movie = await Movie.findById(req.body.movieId);
   const customer = await Customer.findById(req.body.customerId);
@@ -73,7 +83,6 @@ router.post("/", async (req, res) => {
     movie.numberInStock--;
     // movie.save(opts);
     movie.save();
-
 
     // await session.commitTransaction();
     // session.endSession();
