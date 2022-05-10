@@ -1,4 +1,5 @@
 const express = require("express");
+const { pick } = require("lodash");
 const { User, validate } = require("../models/user");
 
 const router = express.Router();
@@ -31,13 +32,18 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const user = new User({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
+    const { name, email, password } = req.body;
+
+    user = new User({
+      name,
+      email,
+      password,
     });
 
     await user.save();
+
+    user = pick(user, ["_id", "name", "email"]);
+
     res.send(user);
   } catch (er) {
     console.log("er", er);
