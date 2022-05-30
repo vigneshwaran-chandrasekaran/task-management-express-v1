@@ -2,12 +2,18 @@ const express = require("express");
 const { pick } = require("lodash");
 const bcrypt = require("bcrypt");
 const { User, validate } = require("../models/user");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   const user = await User.find({}).sort("name");
   res.send(user);
+});
+
+router.get("/me", auth, async (req, res) => {
+  const user = await User.findById(req.user._id).select('-password -__v');
+  res.status(200).json({ data: user });
 });
 
 router.get("/:id", async (req, res) => {
