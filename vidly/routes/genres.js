@@ -1,14 +1,15 @@
 const express = require("express");
 const { Genre, validate } = require("../models/genre");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   const genres = await Genre.find({}).sort("name");
   res.send(genres);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   const genre = await Genre.findById(req.params.id);
 
   if (!genre) {
@@ -17,7 +18,7 @@ router.get("/:id", async (req, res) => {
   res.send(genre);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { error } = validate(req.body);
 
   if (error) {
