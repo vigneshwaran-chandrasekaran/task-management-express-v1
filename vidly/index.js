@@ -9,6 +9,7 @@ const startupDebugger = require("debug")("app:startup");
 const dbDebugger = require("debug")("app:db");
 
 const logger = require("./middleware/logger");
+const error = require("./middleware/error");
 const courses = require("./routes/courses");
 const genres = require("./routes/genres");
 const customers = require("./routes/customers");
@@ -46,6 +47,8 @@ app.use("/api/movies", movies);
 app.use("/api/rentals", rentals);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+
+app.use(error);
 
 app.get("/", (req, res) => {
   res.send("Welcome to vidly World");
