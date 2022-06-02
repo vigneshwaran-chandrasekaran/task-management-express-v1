@@ -1,5 +1,7 @@
 require("dotenv").config();
 require("express-async-errors");
+const winston = require("winston");
+require("winston-mongodb");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
@@ -20,6 +22,39 @@ const users = require("./routes/users");
 const auth = require("./routes/auth");
 
 const app = express();
+
+process
+  .on("unhandledRejection", (reason, p) => {
+    console.error(reason, "Unhandled Rejection at Promise", p);
+    winston.error(reason.message, reason);
+  })
+  .on("uncaughtException", (err) => {
+    console.error(err, "Uncaught Exception thrown");
+    winston.error(err.message, err);
+  });
+
+winston.add(
+  new winston.transports.File({
+    filename: "logfile.log",
+    handleExceptions: true,
+  })
+);
+
+throw new Error("Node js Error!");
+
+// error
+// warn
+// info
+// verbose
+// debug
+// silly
+
+winston.add(
+  new winston.transports.MongoDB({
+    db: process.env.MONGO_URI,
+    level: "info",
+  })
+);
 
 mongoose
   .connect(process.env.MONGO_URI)
