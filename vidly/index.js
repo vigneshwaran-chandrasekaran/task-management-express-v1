@@ -12,16 +12,9 @@ const startupDebugger = require("debug")("app:startup");
 const dbDebugger = require("debug")("app:db");
 
 const logger = require("./middleware/logger");
-const error = require("./middleware/error");
-const courses = require("./routes/courses");
-const genres = require("./routes/genres");
-const customers = require("./routes/customers");
-const movies = require("./routes/movies");
-const rentals = require("./routes/rentals");
-const users = require("./routes/users");
-const auth = require("./routes/auth");
 
 const app = express();
+require("./startup/routes")(app);
 
 process
   .on("unhandledRejection", (reason, p) => {
@@ -68,7 +61,6 @@ mongoose
     console.log("Error to MongoDB...", err);
   });
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(logger);
@@ -78,16 +70,6 @@ if (app.get("env") === "development") {
   dbDebugger("dbDebugger enabled...");
   app.use(morgan("tiny"));
 }
-
-app.use("/api/courses", courses);
-app.use("/api/genres", genres);
-app.use("/api/customers", customers);
-app.use("/api/movies", movies);
-app.use("/api/rentals", rentals);
-app.use("/api/users", users);
-app.use("/api/auth", auth);
-
-app.use(error);
 
 app.get("/", (req, res) => {
   res.send("Welcome to vidly World");
