@@ -40,7 +40,10 @@ winston.add(
   })
 );
 
-throw new Error("Node js Error!");
+// throw new Error("Node js Error!");
+
+// const p = Promise.reject(new Error("Promise Something failed"));
+// p.them((res) => console.log(res));
 
 // error
 // warn
