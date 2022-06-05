@@ -1,8 +1,6 @@
-require("dotenv").config();
-const Joi = require("joi");
-Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
 const helmet = require("helmet");
+const winston = require("winston");
 const morgan = require("morgan");
 const startupDebugger = require("debug")("app:startup");
 const dbDebugger = require("debug")("app:db");
@@ -10,9 +8,11 @@ const dbDebugger = require("debug")("app:db");
 const logger = require("./middleware/logger");
 
 const app = express();
-require("./startup/routes")(app);
-require("./startup/db")();
+require("./startup/config")();
 require("./startup/logging")();
+require("./startup/db")();
+require("./startup/validation")();
+require("./startup/routes")(app);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
@@ -43,4 +43,5 @@ const port = process.env.PORT || 3100;
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
+  winston.info(`Listening on port ${port}...`)
 });
